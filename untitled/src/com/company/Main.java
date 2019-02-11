@@ -16,7 +16,12 @@ public class Main {
         first.setNext(second);
         Node a = first.getNext();
         a.getElement();
-        System.out.println(second.getNext());
+        
+        //Разнинца между == и equals
+        // == - сравнивание выделенной памяти
+        // equals сравниевает значения
+        System.out.println(a==second);
+        System.out.println(String.valueOf(a.getElement()).equals(String.valueOf(first.getElement())));
     }
 }
 
