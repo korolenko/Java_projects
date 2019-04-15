@@ -3,10 +3,10 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 
 public class PostgreConnector {
-    private String DB_URL = "jdbc:postgresql://hdp-study1:5432/d1efw";
-    private String USER = "monitor";
-    private String PASS = "monitor";
-    private String sql = "select * from efw.v_aig_table_list where last_status like '%FAIL%'";
+    private String DB_URL = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    private String USER = "XXXXX";
+    private String PASS = "XXXXX";
+    private String sql = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     private Connection connection = null;
 
     public void setUSER(JTextArea jTextLogin) {
