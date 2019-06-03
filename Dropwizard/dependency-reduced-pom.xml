@@ -19,7 +19,7 @@
               <transformers>
                 <transformer />
                 <transformer>
-                  <mainClass>HelloWorldApplication</mainClass>
+                  <mainClass>UIApplication</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -55,12 +55,20 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>HelloWorldApplication.Main</mainClass>
+              <mainClass>UIApplication.Main</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
     </plugins>

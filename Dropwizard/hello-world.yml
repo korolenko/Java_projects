@@ -1,2 +1,14 @@
-template: Hello, %s!
-defaultName: Strangerr
+server:
+  applicationConnectors:
+  - type: http
+    port: 8080
+    acceptorThreads: 5
+    selectorThreads: 3
+  maxThreads : 10
+  minThreads : 2
+  adminMinThreads: 3
+  adminMaxThreads: 10
+  adminConnectors:
+  - type: http
+    port: 8081
+

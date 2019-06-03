@@ -1,5 +1,9 @@
-C:\Users\Роман\Desktop\Dropwizard\src\main\java\HelloWorldApplication.java
-C:\Users\Роман\Desktop\Dropwizard\src\main\java\TemplateHealthCheck.java
-C:\Users\Роман\Desktop\Dropwizard\src\main\java\Saying.java
-C:\Users\Роман\Desktop\Dropwizard\src\main\java\HelloWorldResource.java
-C:\Users\Роман\Desktop\Dropwizard\src\main\java\HelloWorldConfiguration.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\core\Logger.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\resource\UIResource.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\core\PostgreConnector.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\View\DetailedView.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\core\Table.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\UIHealthCheck.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\View\MainView.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\UIConfiguration.java
+C:\Users\gpbu4997\IdeaProjects\Dropwizard\src\main\java\UIApplication.java
