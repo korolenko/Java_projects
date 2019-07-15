@@ -34,6 +34,11 @@ public class Person {
     private void setAge(int age) {
         Age = age;
     }
+
+    public String toString() {
+        System.out.println("Переопределение метода toString()..");
+        return this.Name + ", "+ this.SurName + ", "+ this.Age;
+    }
     //создаем класс, в который вынесено заполнение свойств класса Person
     static class personBuilder {
         private Person person;
