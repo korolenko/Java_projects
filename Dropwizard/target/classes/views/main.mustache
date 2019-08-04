@@ -1,28 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>FrameWorkViewer_main</title>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FrameWorkViewer</title>
 
-    <!-- Bootstrap -->
+    <script src="/assets/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
 
+    <!-- функция переключения вкладок по статусам -->
+    <script>
+		$(document).ready(function(){
+			 $('#tabs li').click(function(e) {
+			 	localStorage['tab'] = $(this).index();
+				console.log($(this).index());
+				get_ajax($(this).text());
+			});
+		});
+	</script>
+
+    <!-- заполняем таблицу при помощи ajax -->
+    <script>
+	function get_ajax(status){
+	    <!-- Отсекаем до пробела, чтобы отбросить количество в span элементе -->
+		var URL = 'http://localhost:8080/getJobsData/?status=' + status.split(' ')[0];
+				console.log("внутри");
+				console.log(URL);
+				event.preventDefault();
+				$.support.cors = true,
+				$.ajax({
+					url: URL,
+					dataType: "json",
+					data : {jobsColumns: "Columns",jobsRows: "Rows"},
+				success: function(data){
+					$('#table1 thead').html(data['jobsColumns']);
+					$('#table1 tbody').html(data['jobsRows']);
+					console.log(data);
+				},
+				error: function(Eror){
+					console.log(Eror);
+				}
+				});
+	}
+	</script>
+
+    <!-- функция сортировки заданий по длительности-->
+    <script>
+		$(document).ready(function(){
+			  $('table').on('click', '.btn.btn-link', function () {
+				var URL = $(this).attr('data-button');
+				console.log(URL);
+				$.support.cors = true,
+				$.ajax({
+					url: URL,
+					dataType: "json",
+					cache: false,
+					data : {grepLog: "test"},
+				success: function(data){
+					$('#table1 tbody').html(data['grepLog']);
+					console.log(data['grepLog']);
+				},
+				error: function(Eror){
+					console.log(Eror);
+				}
+				});
+			});
+		});
+	</script>
 </head>
-    <h1>FrameWorkViewer Beta</h1>
-    <h2>Список упавших тасков</h2>
-    <table class="table">
-        <thead class="thead-dark">
-            {{{columnNamesMainPageString}}}
-        </thead>
-        <tbody>
-            {{{stringDatalistMainPage}}}
-        </tbody>
-    </table>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/js/bootstrap.min.js"></script>
-    </body>
+<body>
+    <!-- Для запрета кеширования при нажатии назад -->
+    <script>
+        <?php
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        ?>
+    </script>
+
+    <!-- Сохраняем предыдущую открытую вкладку -->
+    <script>
+		$(document).ready(function(){
+			$.support.cors = true;
+			<!-- Используем локальное хранилище -->
+			if (localStorage.getItem('tab')!==undefined)
+			{
+				console.log("индекс " + localStorage.getItem('tab'));
+				$(".nav").find(".active").removeClass("active");
+				var activeNav = $( "li" ).eq(localStorage.getItem('tab')).children();
+				activeNav.addClass('active');
+				var status = $( "#tabs li" ).eq(localStorage.getItem('tab')).text();
+				get_ajax(status);
+			}
+		});
+	</script>
+    <div class="container-fluid">
+        <h2>Мониторинг заданий</h2>
+        <div class="container-fluid">
+            <ul id ="tabs" class="nav nav-tabs" role="tablist">
+                {{{distinctStatuses}}}
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="1i" role="tabpanel">
+                    <table id="table1" class="table table-sm">
+                        <thead class="thead-dark">
+                            {{{columnNamesMainPageString}}}
+                        </thead>
+                        <tbody>
+                            {{{stringDatalistMainPage}}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<footer class="blockquote-footer">
+    <div class="container text-center">
+        <small>
+            Разработчик: Короленко Р. М.
+            e-mail: Roman.Korolenko@gazprombank.ru<br>
+            Банк ГПБ АО&copy; 2019 г.<br>
+        </small>
+    </div>
+</footer>
 </html>

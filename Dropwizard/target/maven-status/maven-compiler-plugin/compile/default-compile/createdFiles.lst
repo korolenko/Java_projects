@@ -1,9 +1,11 @@
 UIHealthCheck.class
-core\Table.class
-UIConfiguration.class
 core\PostgreConnector.class
 View\MainView.class
-View\DetailedView.class
 core\Logger.class
+core\Table.class
+UIConfiguration.class
+core\getGrep.class
+core\getJobsData.class
+View\DetailedView.class
 UIApplication.class
 resource\UIResource.class

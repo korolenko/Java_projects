@@ -16,7 +16,6 @@ public class UIApplication extends Application<UIConfiguration> {
     public void initialize(Bootstrap<UIConfiguration> bootstrap) {
         //добавляем bootstrap файлы
         bootstrap.addBundle(new AssetsBundle());
-        //bootstrap.addBundle(new AssetsBundle("/../../../assets", "/assets"));
         //добавляем шаблоны mustache
         bootstrap.addBundle(new ViewBundle());
     }

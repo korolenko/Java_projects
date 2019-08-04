@@ -2,11 +2,12 @@ package core;
 
 import java.sql.*;
 
+
+//класс-коннектор к СУБД
 public class PostgreConnector {
-    private String DB_URL = "jdbc:postgresql://hdp-study xxx";
-    private String USER = "monitor";
-    private String PASS = "xxx";
-    private String sql = "select name,last_status,last_extract_attempt_dt,last_success_extract_dt from efw.v_aig_table_list where last_status like '%FAIL%'";
+    private final String DB_URL = "jdbc:postgresql:XXX";
+    private final String USER = "USER";
+    private final String PASS = "XXX";
     private Connection connection = null;
 
     public void makeConnection() {
@@ -34,7 +35,7 @@ public class PostgreConnector {
         }
     }
 
-    public void makeSQLQuery(Table table ) throws SQLException {
+    public void makeSQLQuery(Table table, String sql) throws SQLException {
         // Execute SQL query
         Statement statement = null;
         ResultSet resultSet = null;

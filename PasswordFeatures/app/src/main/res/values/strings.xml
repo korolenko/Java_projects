@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PasswordFeatures</string>
+    <string name="button_name">Войти</string>
+    <string name="autohills_password">password</string>
+    <string name="login_User">Введите логин</string>
+    <string name="password_User">Введите пароль</string>
+</resources>

@@ -1,0 +1,246 @@
+2019/07/01 12:21:12  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:12  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:12  You successfully connected to database
+2019/07/01 12:21:12  Выполняем запрос: select xxx.task_name,xxx.last_status, xxx.last_extract_attempt_dt, xxx.extract_duration, xxx.last_apply_attempt_dt, xxx.apply_duration,xxx.source_id, xxx.table_nm
+from
+ (
+        select
+         table_nm,
+         row_number() over(partition by table_nm order by extract_task_start_datetime desc) rn,
+         database_nm ::text || '.' ::text ||  table_nm "task_name",
+         CASE
+                    WHEN ((apply_task_end_datetime IS NOT NULL) AND (finished_cd = '-1'::integer)) THEN 'FAIL_ON_APPLY'::text
+                    WHEN ((extract_task_end_datetime IS NOT NULL) AND (finished_cd = '-1'::integer)) THEN 'FAIL_ON_EXTRACT'::text
+                    WHEN ((apply_task_end_datetime IS  NULL) AND extract_task_end_datetime is null) THEN 'FAIL'::text
+                    WHEN ((apply_task_end_datetime IS NOT NULL) AND (finished_cd = 0)) THEN 'OK'::text
+                    WHEN ((apply_task_start_datetime IS NOT NULL) AND (apply_task_end_datetime IS NULL)) THEN 'ON_APPLY'::text
+                    WHEN ((extract_task_end_datetime IS NOT NULL) AND (finished_cd = 0)) THEN 'WAIT_FOR_APPLY'::text
+                    WHEN (extract_task_end_datetime IS NULL) THEN 'ON_EXTRACT'::text
+                    ELSE NULL::text
+         END AS last_status,
+         finished_cd,source_id,
+        extract_task_start_datetime "last_extract_attempt_dt", 
+        to_char(extract_task_end_datetime - extract_task_start_datetime,'HH24:MI:SS') "extract_duration",
+        apply_task_start_datetime "last_apply_attempt_dt",
+        to_char(apply_task_end_datetime - apply_task_start_datetime,'HH24:MI:SS') "apply_duration"
+        from  efw.md_journal 
+        where 1=1
+        order by extract_task_start_datetime desc
+  )xxx
+  where rn=1        
+  and last_status like '%FAIL%'
+2019/07/01 12:21:12  Selection has finished sucsessfully
+2019/07/01 12:21:12  Connection successfully closed
+2019/07/01 12:21:12  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:12  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:12  You successfully connected to database
+2019/07/01 12:21:12  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like '%FAIL%'
+2019/07/01 12:21:12  Selection has finished sucsessfully
+2019/07/01 12:21:12  Connection successfully closed
+2019/07/01 12:21:12  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:12  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:13  You successfully connected to database
+2019/07/01 12:21:13  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like 'FAIL_ON_EXTRACT'
+2019/07/01 12:21:13  Selection has finished sucsessfully
+2019/07/01 12:21:13  Connection successfully closed
+2019/07/01 12:21:13  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:13  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:13  You successfully connected to database
+2019/07/01 12:21:13  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like 'FAIL_ON_APPLY'
+2019/07/01 12:21:13  Selection has finished sucsessfully
+2019/07/01 12:21:13  Connection successfully closed
+2019/07/01 12:21:13  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:13  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:13  You successfully connected to database
+2019/07/01 12:21:13  Выполняем запрос: select distinct last_status from efw.v_aig_table_list 
+union 
+select 'ALL_STATUSES' "last_status"
+2019/07/01 12:21:14  Selection has finished sucsessfully
+2019/07/01 12:21:14  Connection successfully closed
+2019/07/01 12:21:26  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:26  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:26  You successfully connected to database
+2019/07/01 12:21:26  Выполняем запрос: select xxx.task_name,xxx.last_status, xxx.last_extract_attempt_dt, xxx.extract_duration, xxx.last_apply_attempt_dt, xxx.apply_duration,xxx.source_id, xxx.table_nm
+from
+ (
+        select
+         table_nm,
+         row_number() over(partition by table_nm order by extract_task_start_datetime desc) rn,
+         database_nm ::text || '.' ::text ||  table_nm "task_name",
+         CASE
+                    WHEN ((apply_task_end_datetime IS NOT NULL) AND (finished_cd = '-1'::integer)) THEN 'FAIL_ON_APPLY'::text
+                    WHEN ((extract_task_end_datetime IS NOT NULL) AND (finished_cd = '-1'::integer)) THEN 'FAIL_ON_EXTRACT'::text
+                    WHEN ((apply_task_end_datetime IS  NULL) AND extract_task_end_datetime is null) THEN 'FAIL'::text
+                    WHEN ((apply_task_end_datetime IS NOT NULL) AND (finished_cd = 0)) THEN 'OK'::text
+                    WHEN ((apply_task_start_datetime IS NOT NULL) AND (apply_task_end_datetime IS NULL)) THEN 'ON_APPLY'::text
+                    WHEN ((extract_task_end_datetime IS NOT NULL) AND (finished_cd = 0)) THEN 'WAIT_FOR_APPLY'::text
+                    WHEN (extract_task_end_datetime IS NULL) THEN 'ON_EXTRACT'::text
+                    ELSE NULL::text
+         END AS last_status,
+         finished_cd,source_id,
+        extract_task_start_datetime "last_extract_attempt_dt", 
+        to_char(extract_task_end_datetime - extract_task_start_datetime,'HH24:MI:SS') "extract_duration",
+        apply_task_start_datetime "last_apply_attempt_dt",
+        to_char(apply_task_end_datetime - apply_task_start_datetime,'HH24:MI:SS') "apply_duration"
+        from  efw.md_journal 
+        where 1=1
+        order by extract_task_start_datetime desc
+  )xxx
+  where rn=1        
+  and last_status like '%FAIL%'
+2019/07/01 12:21:27  Selection has finished sucsessfully
+2019/07/01 12:21:27  Connection successfully closed
+2019/07/01 12:21:27  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:27  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:27  You successfully connected to database
+2019/07/01 12:21:27  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like '%FAIL%'
+2019/07/01 12:21:27  Selection has finished sucsessfully
+2019/07/01 12:21:27  Connection successfully closed
+2019/07/01 12:21:27  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:27  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:27  You successfully connected to database
+2019/07/01 12:21:27  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like 'FAIL_ON_EXTRACT'
+2019/07/01 12:21:28  Selection has finished sucsessfully
+2019/07/01 12:21:28  Connection successfully closed
+2019/07/01 12:21:28  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:28  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:28  You successfully connected to database
+2019/07/01 12:21:28  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like 'FAIL_ON_APPLY'
+2019/07/01 12:21:28  Selection has finished sucsessfully
+2019/07/01 12:21:28  Connection successfully closed
+2019/07/01 12:21:28  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:21:28  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:21:28  You successfully connected to database
+2019/07/01 12:21:28  Выполняем запрос: select distinct last_status from efw.v_aig_table_list 
+union 
+select 'ALL_STATUSES' "last_status"
+2019/07/01 12:21:29  Selection has finished sucsessfully
+2019/07/01 12:21:29  Connection successfully closed
+2019/07/01 12:23:24  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:23:24  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:23:24  You successfully connected to database
+2019/07/01 12:23:24  Выполняем запрос: select xxx.task_name,xxx.last_status, xxx.last_extract_attempt_dt, xxx.extract_duration, xxx.last_apply_attempt_dt, xxx.apply_duration,xxx.source_id, xxx.table_nm
+from
+ (
+        select
+         table_nm,
+         row_number() over(partition by table_nm order by extract_task_start_datetime desc) rn,
+         database_nm ::text || '.' ::text ||  table_nm "task_name",
+         CASE
+                    WHEN ((apply_task_end_datetime IS NOT NULL) AND (finished_cd = '-1'::integer)) THEN 'FAIL_ON_APPLY'::text
+                    WHEN ((extract_task_end_datetime IS NOT NULL) AND (finished_cd = '-1'::integer)) THEN 'FAIL_ON_EXTRACT'::text
+                    WHEN ((apply_task_end_datetime IS  NULL) AND extract_task_end_datetime is null) THEN 'FAIL'::text
+                    WHEN ((apply_task_end_datetime IS NOT NULL) AND (finished_cd = 0)) THEN 'OK'::text
+                    WHEN ((apply_task_start_datetime IS NOT NULL) AND (apply_task_end_datetime IS NULL)) THEN 'ON_APPLY'::text
+                    WHEN ((extract_task_end_datetime IS NOT NULL) AND (finished_cd = 0)) THEN 'WAIT_FOR_APPLY'::text
+                    WHEN (extract_task_end_datetime IS NULL) THEN 'ON_EXTRACT'::text
+                    ELSE NULL::text
+         END AS last_status,
+         finished_cd,source_id,
+        extract_task_start_datetime "last_extract_attempt_dt", 
+        to_char(extract_task_end_datetime - extract_task_start_datetime,'HH24:MI:SS') "extract_duration",
+        apply_task_start_datetime "last_apply_attempt_dt",
+        to_char(apply_task_end_datetime - apply_task_start_datetime,'HH24:MI:SS') "apply_duration"
+        from  efw.md_journal 
+        where 1=1
+        order by extract_task_start_datetime desc
+  )xxx
+  where rn=1        
+  and last_status like '%FAIL%'
+2019/07/01 12:23:25  Selection has finished sucsessfully
+2019/07/01 12:23:25  Connection successfully closed
+2019/07/01 12:23:25  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:23:25  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:23:25  You successfully connected to database
+2019/07/01 12:23:25  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like '%FAIL%'
+2019/07/01 12:23:25  Selection has finished sucsessfully
+2019/07/01 12:23:25  Connection successfully closed
+2019/07/01 12:23:25  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:23:25  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:23:25  You successfully connected to database
+2019/07/01 12:23:25  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like 'FAIL_ON_EXTRACT'
+2019/07/01 12:23:26  Selection has finished sucsessfully
+2019/07/01 12:23:26  Connection successfully closed
+2019/07/01 12:23:26  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:23:26  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:23:26  You successfully connected to database
+2019/07/01 12:23:26  Выполняем запрос: select count(*) from efw.v_aig_table_list where last_status like 'FAIL_ON_APPLY'
+2019/07/01 12:23:26  Selection has finished sucsessfully
+2019/07/01 12:23:26  Connection successfully closed
+2019/07/01 12:23:26  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:23:26  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:23:26  You successfully connected to database
+2019/07/01 12:23:26  Выполняем запрос: select distinct last_status from efw.v_aig_table_list 
+union 
+select 'ALL_STATUSES' "last_status"
+2019/07/01 12:23:27  Selection has finished sucsessfully
+2019/07/01 12:23:27  Connection successfully closed
+2019/07/01 12:24:36  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:24:36  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:24:36  You successfully connected to database
+2019/07/01 12:24:36  Выполняем запрос: select xxx.task_name,xxx.last_status, xxx.last_extract_attempt_dt, xxx.extract_duration, xxx.last_apply_attempt_dt, xxx.apply_duration, xxx.source_id, xxx.table_nm
+                from 
+                 ( 
+                        select 
+                         table_nm,
+                        row_number() over(partition by table_nm order by extract_task_start_datetime desc) rn, 
+                         database_nm ::text || '.' ::text ||  table_nm "task_name",
+                         CASE 
+                                    WHEN ((apply_task_end_datetime IS NOT NULL) AND (finished_cd = '-1'::integer)) THEN 'FAIL_ON_APPLY'::text
+                                    WHEN ((extract_task_end_datetime IS NOT NULL) AND (finished_cd = '-1'::integer)) THEN 'FAIL_ON_EXTRACT'::text
+                                    WHEN ((apply_task_end_datetime IS  NULL) AND extract_task_end_datetime is null) THEN 'FAIL'::text
+                                    WHEN ((apply_task_end_datetime IS NOT NULL) AND (finished_cd = 0)) THEN 'OK'::text
+                                    WHEN ((apply_task_start_datetime IS NOT NULL) AND (apply_task_end_datetime IS NULL)) THEN 'ON_APPLY'::text 
+                                    WHEN ((extract_task_end_datetime IS NOT NULL) AND (finished_cd = 0)) THEN 'WAIT_FOR_APPLY'::text
+                                    WHEN (extract_task_end_datetime IS NULL) THEN 'ON_EXTRACT'::text
+                                    ELSE NULL::text
+                         END AS last_status,
+                         finished_cd,
+                       extract_task_start_datetime "last_extract_attempt_dt", 
+                        to_char(extract_task_end_datetime - extract_task_start_datetime,'HH24:MI:SS') "extract_duration", 
+                        apply_task_start_datetime "last_apply_attempt_dt",
+                        to_char(apply_task_end_datetime - apply_task_start_datetime,'HH24:MI:SS') "apply_duration", 
+                        source_id
+                        from  efw.md_journal 
+                        where 1=1
+                        order by extract_task_start_datetime desc 
+                  )xxx 
+                  where rn=1 limit 10
+2019/07/01 12:24:37  Selection has finished sucsessfully
+2019/07/01 12:24:37  Connection successfully closed
+2019/07/01 12:24:56  111task_name
+2019/07/01 12:24:56  111last_status
+2019/07/01 12:24:56  111last_extract_attempt_dt
+2019/07/01 12:24:56  111extract_duration
+2019/07/01 12:24:56  111last_apply_attempt_dt
+2019/07/01 12:24:56  111apply_duration
+2019/07/01 12:24:56  111source_id
+2019/07/01 12:24:56  111table_nm
+2019/07/01 12:24:56  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:24:56  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:24:56  You successfully connected to database
+2019/07/01 12:24:56  Выполняем запрос: SELECT to_char(mmm.extract_task_start_datetime,'yyyy:mm:dd HH24:MI:SS')::text || ' (' ::text || to_char(mmm.extract_task_end_datetime - mmm.extract_task_start_datetime,'HH24:MI:SS') ::text || ')' "extract start time (duration)",
+case when mmm.apply_task_start_datetime is not null then 0 
+    else mmm.journal_id  end AS last_extract_log_file,
+to_char(mmm.apply_task_start_datetime,'yyyy:mm:dd HH24:MI:SS')::text || ' (' ::text || to_char(mmm.apply_task_end_datetime - mmm.apply_task_start_datetime,'HH24:MI:SS') ::text || ')' "apply start time (duration)",
+case when mmm.apply_task_start_datetime is null then 0
+    else mmm.journal_id end AS last_apply_log_file,
+mmm.finished_cd,mmm.source_id,mmm.rows_count,mmm.incr_rows_count
+from efw.md_journal mmm WHERE mmm.table_nm = 'email'
+  AND mmm.finished_cd <>0 
+  and mmm.source_id = '25'
+ORDER BY mmm.journal_id DESC
+2019/07/01 12:24:56  Selection has finished sucsessfully
+2019/07/01 12:24:56  Connection successfully closed
+2019/07/01 12:24:56  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:24:56  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:24:56  You successfully connected to database
+2019/07/01 12:24:56  Выполняем запрос: SELECT column_nm,src_data_type,hdp_data_type FROM efw.md_table_ddl WHERE table_nm ='email'
+2019/07/01 12:24:56  Selection has finished sucsessfully
+2019/07/01 12:24:56  Connection successfully closed
+2019/07/01 12:24:56  Trying to make connection to PostgreSQL JDBC
+2019/07/01 12:24:56  PostgreSQL JDBC Driver successfully connected
+2019/07/01 12:24:56  You successfully connected to database
+2019/07/01 12:24:56  Выполняем запрос: SELECT * FROM efw.md_table_config WHERE config_id = 'null'
+2019/07/01 12:24:56  Ошибка: org.postgresql.util.PSQLException: ERROR: invalid input syntax for integer: "null"
+  Position: 53

@@ -1,25 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>FrameWorkViewer_detailed</title>
+    <style>
+        #myDIV {
+            width: 100%;
+            text-align: center;
+          }
+          body {font-family: Arial, Helvetica, sans-serif;}
+
+        /* The Modal (background) */
+        .modal {
+              display: none; /* Hidden by default */
+              position: fixed; /* Stay in place */
+              z-index: 1; /* Sit on top */
+              padding-top: 100px; /* Location of the box */
+              left: 0;
+              top: 0;
+              width: 100%; /* Full width */
+              height: 100%; /* Full height */
+              overflow: auto; /* Enable scroll if needed */
+              background-color: rgb(0,0,0); /* Fallback color */
+              background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+              color: #aaaaaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+              color: #000;
+              text-decoration: none;
+              cursor: pointer;
+        }
+    </style>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FrameWorkViewer</title>
 
-    <!-- Bootstrap -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/assets/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <script src="/assets/jquery.min.js"></script>
 
+    <!-- функция показа всплывающего окна с grep ошибкой -->
+    <script>
+        $(document).ready(function(){
+            $('.btn.btn-danger').on('click', function () {
+            var URL = $(this).attr('data-button');
+            console.log(URL);
+            $.support.cors = true,
+            $.ajax({
+                url: URL,
+                dataType: "json",
+                cache: false,
+                data : {grepLog: "test"},
+                success: function(data){
+                        $('.modal-content').text("Ошибка: " + data['grepLog']);
+                },
+                error: function(Eror){
+                console.log(Eror);
+                    $('.modal-content').text("При получении ошибки возникла проблема: " + JSON.stringify(Eror));
+                }
+            });
+              $('#myModal').modal();
+            });
+        });
+    </script>
 </head>
-<h2>Detailed information of failed task: {{taskName}}</h2>
-<table class="table">
-    <tbody>
-    {{{stringDatalistDetailed}}}
-    </tbody>
-</table>
-<p>Grep: {{stringGrepDataResult}}</p>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/assets/js/bootstrap.min.js"></script>
+<body>
+    <script>
+        <?php
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        ?>
+    </script>
+    <div class="container-fluid">
+        <h2>Подробная информация о задании: <strong><u>{{taskName}}</u></strong></h2>
+        <br>
+        <p align="center"><strong>Журнал операций EXTRACT и APPLY</strong></p>
+        <table class="table table-bordered text-center">
+            <thead class="thead-dark">
+                {{{stringColumnListDetailed}}}
+            </thead>
+            <tbody>
+                {{{stringDatalistDetailed}}}
+            </tbody>
+        </table>
+    </div>
+    <div class="container-fluid">
+        <p align="center"><strong>Данные efw.md_table_list:</strong></p>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                {{{stringColumnList_md_table_list}}}
+            </thead>
+            <tbody>
+                {{{stringDataList_md_table_list}}}
+            </tbody>
+        </table>
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Посмотреть дополнительные параметры
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <p align="center"><strong>Данные efw.md_table_config:</strong></p>
+                        <table class="table table-bordered text-center">
+                            <thead class="thead-dark">
+                                {{{stringColumnList_md_table_config}}}
+                            </thead>
+                            <tbody>
+                                {{{stringDataList_md_table_config}}}
+                            </tbody>
+                        </table>
+                        <p align="center"><strong>Данные efw.md_table_state:</strong></p>
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                {{{stringColumnList_md_table_state}}}
+                            </thead>
+                            <tbody>
+                                {{{stringDataList_md_table_state}}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordion" id="accordion2">
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                            Показать описание полей таблицы
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseTwo" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion2">
+                    <div class="card-body">
+                        <p align="center"><strong>Данные efw.md_table_ddl:</strong></p>
+                        <table class="table table-bordered text-center">
+                            <thead class="thead-dark">
+                                {{{stringColumnListSql2}}}
+                            </thead>
+                            <tbody>
+                                {{{stringDatalistSql2}}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальный контейнер -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div id = "divModal" class="modal-content text-center">
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>
