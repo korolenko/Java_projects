@@ -104,7 +104,6 @@ public class YaDates {
                         dateMap.put(monday, sunday);
                         start = sunday.plusDays(1);
                     }else{
-                        System.out.println(6);
                         monday = start.with(firstDayOfYear()).withMonth(10).withDayOfMonth(1).minusDays(1);
                         if (monday.isBefore(start)) {
                             monday = start;
