@@ -27,16 +27,12 @@ public class YaDates {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate start = LocalDate.parse(x[0], formatter);
         LocalDate end = LocalDate.parse(x[1], formatter);
-        System.out.println("Period: " + period);
-        System.out.println("Start day: " + start);
-        System.out.println("End day: " + end);
 
         Map<LocalDate,LocalDate> dateMap = new LinkedHashMap<>();
         switch (period.toUpperCase()){
             case "WEEK": {
                 LocalDate sunday;
                 do {
-                    System.out.println("Start date: " + start);
                     LocalDate monday = start.with(previousOrSame(MONDAY));
                     if (monday.isBefore(start)) {
                         monday = start;
@@ -46,8 +42,6 @@ public class YaDates {
                         sunday = end;
                     }
                     dateMap.put(monday, sunday);
-                    System.out.println("Monday of the Week: " + monday);
-                    System.out.println("Sunday of the Week: " + sunday);
                     start = sunday.plusDays(1);
                 } while (end.isAfter(sunday));
                 break;
@@ -55,7 +49,6 @@ public class YaDates {
             case "MONTH":{
                 LocalDate sunday;
                 do {
-                    System.out.println("Start date: " + start);
                     LocalDate monday = start.withDayOfMonth(1);
                     if (monday.isBefore(start)) {
                         monday = start;
@@ -65,8 +58,6 @@ public class YaDates {
                         sunday = end;
                     }
                     dateMap.put(monday, sunday);
-                    System.out.println("Start of the month: " + monday);
-                    System.out.println("End of the month: " + sunday);
                     start = sunday.plusDays(1);
                 } while (end.isAfter(sunday));
                 break;
@@ -74,7 +65,6 @@ public class YaDates {
             case "QUARTER":{
                 LocalDate sunday;
                 do {
-                    System.out.println("Start date: " + start);
                     LocalDate monday = start.with(start.getMonth().firstMonthOfQuarter())
                             .with(TemporalAdjusters.firstDayOfMonth());
                     sunday = monday.plusMonths(2)
@@ -89,8 +79,6 @@ public class YaDates {
                         sunday = end;
                     }
                     dateMap.put(monday, sunday);
-                    System.out.println("Start of the QUARTER: " + monday);
-                    System.out.println("End of the QUARTER: " + sunday);
                     start = sunday.plusDays(1);
                 } while (end.isAfter(sunday));
                 break;
@@ -98,12 +86,10 @@ public class YaDates {
             case "REVIEW":{
                 LocalDate sunday;
                 do {
-                    System.out.println("Start date: " + start);
                     int month = start.getMonth().getValue();
                     LocalDate monday;
                     if(month <= 9){
                         monday = start.with(firstDayOfYear()).with(start.withMonth(4).withDayOfMonth(1));
-                        System.out.println("monday " + monday);
                         if (monday.isBefore(start)) {
                             monday = start;
                         }
@@ -112,32 +98,26 @@ public class YaDates {
                         if (sunday.isAfter(limitEnd)) {
                                   sunday = limitEnd;
                         }
-                        System.out.println("sunday " + sunday);
                         if (sunday.isAfter(end)) {
                             sunday = end;
                         }
                         dateMap.put(monday, sunday);
-                        System.out.println("Start of the REVIEW: " + monday);
-                        System.out.println("End of the REVIEW: " + sunday);
                         start = sunday.plusDays(1);
                     }else{
                         System.out.println(6);
                         monday = start.with(firstDayOfYear()).withMonth(10).withDayOfMonth(1).minusDays(1);
-                        System.out.println("monday " + monday);
                         if (monday.isBefore(start)) {
                             monday = start;
                         }
                         sunday = monday.plusMonths(7).withDayOfMonth(1).minusDays(1);
-                        if (sunday.isAfter(monday.plusYears(1).with(firstDayOfYear()).with(monday.plusYears(1).withMonth(4).withDayOfMonth(1)).minusDays(1))) {
-                            sunday = monday.plusYears(1).with(firstDayOfYear()).with(monday.plusYears(1).withMonth(4).withDayOfMonth(1).minusDays(1));
+                        LocalDate sundayLimit = monday.plusYears(1).with(firstDayOfYear()).with(monday.plusYears(1).withMonth(4).withDayOfMonth(1)).minusDays(1);
+                        if (sunday.isAfter(sundayLimit)) {
+                            sunday = sundayLimit;
                         }
-                        System.out.println("sunday " + sunday);
                         if (sunday.isAfter(end)) {
                             sunday = end;
                         }
                         dateMap.put(monday, sunday);
-                        System.out.println("Start of the REVIEW: " + monday);
-                        System.out.println("End of the REVIEW: " + sunday);
                         start = sunday;
                     }
                 } while (end.isAfter(sunday));
@@ -146,7 +126,6 @@ public class YaDates {
             case "YEAR":{
                 LocalDate sunday;
                 do {
-                    System.out.println("Start date: " + start);
                     LocalDate monday = start.with(firstDayOfYear());
                     if (monday.isBefore(start)) {
                         monday = start;
@@ -156,8 +135,6 @@ public class YaDates {
                         sunday = end;
                     }
                     dateMap.put(monday, sunday);
-                    System.out.println("Start of the year: " + monday);
-                    System.out.println("End of the year: " + sunday);
                     start = sunday.plusDays(1);
                 } while (end.isAfter(sunday));
                 break;
